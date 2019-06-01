@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Sonya Karpovich](https://up.htmlacademy.ru/javascript/17/user/838895).
-* Наставник: `Неизвестно`.
+* Наставник: [Анастасия Шевченко](https://htmlacademy.ru/profile/id125164).
 
 ---
 
