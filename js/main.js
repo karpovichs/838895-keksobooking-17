@@ -4,11 +4,11 @@ var OFFER_TYPES = ['place', 'flat', 'house', 'bungalo'];
 var OFFER_COUNT = 8;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-var TYPES = {
-  bungalo: 0,
-  flat: 1000,
-  house: 5000,
-  palace: 10000
+var AccomodationType = {
+  BUNGALO: 0,
+  FLAT: 1000,
+  HOUSE: 5000,
+  PALACE: 10000
 };
 
 function getRandomNumber(min, max) {
@@ -48,8 +48,8 @@ function setPinCoordinates() {
 }
 
 function changeMinPrice() {
-  priceInput.min = TYPES[typeSelect.value];
-  priceInput.placeholder = TYPES[typeSelect.value];
+  priceInput.min = AccomodationType[typeSelect.value.toUpperCase()];
+  priceInput.placeholder = AccomodationType[typeSelect.value.toUpperCase()];
 }
 
 function createOfferArray() {
