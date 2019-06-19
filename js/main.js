@@ -9,6 +9,38 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function formDisable(element) {
+  for (var i = 0; i < element.length; i++) {
+    element[i].disabled = true;
+  }
+}
+
+function formUndisable(element) {
+  for (var i = 0; i < element.length; i++) {
+    element[i].disabled = false;
+  }
+}
+
+function pageActivate() {
+  map.classList.remove('map--faded');
+
+  for (var i = 0; i < OFFER_COUNT; i++) {
+    fragment.appendChild(renderPin(similarOffers[i]));
+  }
+  pinList.appendChild(fragment);
+
+  adForm.classList.remove('ad-form--disabled');
+
+  formUndisable(formFieldset);
+  formUndisable(filterSelect);
+}
+
+function setPinCoordinates() {
+  var coordinateX = parseInt(mainPin.style.left, 10) - PIN_WIDTH / 2;
+  var coordinateY = parseInt(mainPin.style.top, 10) + PIN_HEIGHT;
+  adressInput.value = coordinateX + ', ' + coordinateY;
+}
+
 function createOfferArray() {
   var offers = [];
   for (var i = 0; i < OFFER_COUNT; i++) {
@@ -43,11 +75,17 @@ var pinList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var similarOffers = createOfferArray();
 var fragment = document.createDocumentFragment();
+var mainPin = map.querySelector('.map__pin--main');
+var filterSelect = document.querySelectorAll('.map__filter');
+var adForm = document.querySelector('.ad-form');
+var formFieldset = adForm.querySelectorAll('fieldset');
+var adressInput = adForm.querySelector('input[name=address]');
 
-map.classList.remove('map--faded');
+formDisable(formFieldset);
+formDisable(filterSelect);
 
-for (var i = 0; i < OFFER_COUNT; i++) {
-  fragment.appendChild(renderPin(similarOffers[i]));
-}
+adressInput.value = '545, 445';
 
-pinList.appendChild(fragment);
+mainPin.addEventListener('click', pageActivate);
+
+mainPin.addEventListener('mouseup', setPinCoordinates);
