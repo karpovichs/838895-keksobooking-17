@@ -4,6 +4,8 @@ var OFFER_TYPES = ['place', 'flat', 'house', 'bungalo'];
 var OFFER_COUNT = 8;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var MAIN_PIN_WIDTH = 65;
+var MAIN_PIN_HEIGHT = 80;
 var AccomodationType = {
   BUNGALO: 0,
   FLAT: 1000,
@@ -28,7 +30,9 @@ function formUndisable(element) {
 }
 
 function pageActivate() {
-  map.classList.remove('map--faded');
+  if (map.classList.contains('map--faded')) {
+    map.classList.remove('map--faded');
+  }
 
   for (var i = 0; i < OFFER_COUNT; i++) {
     fragment.appendChild(renderPin(similarOffers[i]));
@@ -42,8 +46,8 @@ function pageActivate() {
 }
 
 function setPinCoordinates() {
-  var coordinateX = parseInt(mainPin.style.left, 10) - PIN_WIDTH / 2;
-  var coordinateY = parseInt(mainPin.style.top, 10) + PIN_HEIGHT;
+  var coordinateX = parseInt(mainPin.style.left, 10) - MAIN_PIN_WIDTH / 2;
+  var coordinateY = parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT;
   adressInput.value = coordinateX + ', ' + coordinateY;
 }
 
@@ -95,13 +99,17 @@ var typeSelect = adForm.querySelector('#type');
 var priceInput = adForm.querySelector('input[name=price]');
 var timeInSelect = adForm.querySelector('#timein');
 var timeOutSelect = adForm.querySelector('#timeout');
+var limits = {
+  top: 130 - MAIN_PIN_HEIGHT,
+  right: map.offsetWidth - MAIN_PIN_WIDTH,
+  bottom: 630 - MAIN_PIN_HEIGHT,
+  left: 0
+};
 
 formDisable(formFieldset);
 formDisable(filterSelect);
 
 adressInput.value = '545, 445';
-
-mainPin.addEventListener('click', pageActivate);
 
 mainPin.addEventListener('mouseup', setPinCoordinates);
 
@@ -112,4 +120,39 @@ timeInSelect.addEventListener('change', function () {
 });
 timeOutSelect.addEventListener('change', function () {
   timeInSelect.value = timeOutSelect.value;
+});
+
+mainPin.addEventListener('mouseup', pageActivate);
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  function onMouseMove(moveEvt) {
+    moveEvt.preventDefault();
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY,
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    mainPin.style.left = Math.max(Math.min((mainPin.offsetLeft - shift.x), limits.right), limits.left) + 'px';
+    mainPin.style.top = Math.max(Math.min((mainPin.offsetTop - shift.y), limits.bottom), limits.top) + 'px';
+  }
+
+  function onMouseUp(upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  }
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
 });
