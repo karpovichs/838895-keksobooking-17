@@ -30,9 +30,7 @@ function formUndisable(element) {
 }
 
 function pageActivate() {
-  if (map.classList.contains('map--faded')) {
-    map.classList.remove('map--faded');
-  }
+  map.classList.remove('map--faded');
 
   for (var i = 0; i < OFFER_COUNT; i++) {
     fragment.appendChild(renderPin(similarOffers[i]));
@@ -99,11 +97,11 @@ var typeSelect = adForm.querySelector('#type');
 var priceInput = adForm.querySelector('input[name=price]');
 var timeInSelect = adForm.querySelector('#timein');
 var timeOutSelect = adForm.querySelector('#timeout');
-var limits = {
-  top: 130 - MAIN_PIN_HEIGHT,
-  right: map.offsetWidth - MAIN_PIN_WIDTH,
-  bottom: 630 - MAIN_PIN_HEIGHT,
-  left: 0
+var Limits = {
+  TOP: 130 - MAIN_PIN_HEIGHT,
+  RIGHT: map.offsetWidth - MAIN_PIN_WIDTH,
+  BOTTOM: 630 - MAIN_PIN_HEIGHT,
+  LEFT: 0
 };
 
 formDisable(formFieldset);
@@ -143,8 +141,8 @@ mainPin.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    mainPin.style.left = Math.max(Math.min((mainPin.offsetLeft - shift.x), limits.right), limits.left) + 'px';
-    mainPin.style.top = Math.max(Math.min((mainPin.offsetTop - shift.y), limits.bottom), limits.top) + 'px';
+    mainPin.style.left = Math.max(Math.min((mainPin.offsetLeft - shift.x), Limits.RIGHT), Limits.LEFT) + 'px';
+    mainPin.style.top = Math.max(Math.min((mainPin.offsetTop - shift.y), Limits.BOTTOM), Limits.TOP) + 'px';
   }
 
   function onMouseUp(upEvt) {
