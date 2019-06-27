@@ -16,10 +16,30 @@
   var priceInput = adForm.querySelector('input[name=price]');
   var timeInSelect = adForm.querySelector('#timein');
   var timeOutSelect = adForm.querySelector('#timeout');
+  var formSubmit = adForm.querySelector('.ad-form__submit');
 
   function changeMinPrice() {
     priceInput.min = AccomodationType[typeSelect.value.toUpperCase()];
     priceInput.placeholder = AccomodationType[typeSelect.value.toUpperCase()];
+  }
+
+  function onSubmitSuccess() {
+    window.alerts.showSuccess();
+  }
+
+  function onSubmitError() {
+    window.alerts.showError();
+    formSubmit.disabled = false;
+  }
+
+  function onFormSubmit(evt) {
+    evt.preventDefault();
+
+    formSubmit.disabled = true;
+    window.backend.save(new FormData(adForm), function () {
+      onSubmitSuccess();
+      formSubmit.disabled = false;
+    }, onSubmitError);
   }
 
   window.utils.formDisable(formFieldset);
@@ -33,4 +53,6 @@
   timeOutSelect.addEventListener('change', function () {
     timeInSelect.value = timeOutSelect.value;
   });
+
+  adForm.addEventListener('submit', onFormSubmit);
 })();
