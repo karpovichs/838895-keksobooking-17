@@ -1,13 +1,9 @@
 'use strict';
 
 (function () {
-  var OFFER_TYPES = ['place', 'flat', 'house', 'bungalo'];
-  var OFFER_COUNT = 8;
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
 
-  var map = document.querySelector('.map');
-  var mapWidth = map.clientWidth;
   var pinList = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
@@ -21,28 +17,12 @@
   }
 
   window.pin = {
-    createOfferArray: function () {
-      var offers = [];
-      for (var i = 0; i < OFFER_COUNT; i++) {
-        offers.push({
-          author: {
-            avatar: 'img/avatars/user0' + (i + 1) + '.png'
-          },
-          offer: {
-            type: OFFER_TYPES[window.utils.getRandomNumber(0, OFFER_TYPES.length)],
-          },
-          location: {
-            x: window.utils.getRandomNumber(0, mapWidth),
-            y: window.utils.getRandomNumber(130, 631)
-          }
-        });
-      }
-      return offers;
-    },
     renderPinList: function (offers) {
       var fragment = document.createDocumentFragment();
-      for (var i = 0; i < OFFER_COUNT; i++) {
-        fragment.appendChild(renderPin(offers[i]));
+      for (var i = 0; i < offers.length - 1; i++) {
+        if (offers[i].offer) {
+          fragment.appendChild(renderPin(offers[i]));
+        }
       }
       pinList.appendChild(fragment);
     }

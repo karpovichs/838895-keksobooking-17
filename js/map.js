@@ -17,15 +17,22 @@
     LEFT: 0
   };
 
+  function onOffersSuccess(offers) {
+    window.pin.renderPinList(offers);
+  }
+
+  function onOffersError() {
+    window.alerts.showError();
+  }
+
   function pageActivate() {
     map.classList.remove('map--faded');
 
-    var offersList = window.pin.createOfferArray();
-    window.pin.renderPinList(offersList);
+    window.backend.load(onOffersSuccess, onOffersError);
 
     adForm.classList.remove('ad-form--disabled');
-    window.utils.formUndisable(formFieldset);
-    window.utils.formUndisable(filterSelect);
+    window.utils.formEnable(formFieldset);
+    window.utils.formEnable(filterSelect);
   }
 
   function setPinCoordinates() {
