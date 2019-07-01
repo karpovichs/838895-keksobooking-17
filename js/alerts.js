@@ -13,6 +13,7 @@
 
     return (template, className);
   }
+
   function onAlertEscPress(evt) {
     window.utils.isEscEvent(evt, hideAlert);
   }
