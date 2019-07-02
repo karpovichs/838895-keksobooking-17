@@ -1,28 +1,12 @@
 'use strict';
 
 (function () {
-  var AccomodationType = {
-    bungalo: 'Бунгало',
-    flat: 'Квартира',
-    house: 'Дом',
-    palace: 'Дворец'
-  };
-
-  var roomsDic = {
-    'one': 'комната',
-    'few': 'комнаты',
-    'many': 'комнат'
-  };
-
-  var guestDic = {
-    'one': 'гостя',
-    'few': 'гостей',
-    'many': 'гостей'
-  };
+  var rooms = ['комната', 'комнаты', 'комнат'];
+  var guests = ['гостя', 'гостей', 'гостей'];
 
   var PhotoSize = {
-    width: 45,
-    height: 40
+    WIDTH: 45,
+    HEIGHT: 40
   };
 
   var isCardOpened = false;
@@ -43,8 +27,8 @@
     cardElement.querySelector('.popup__title').innerHTML = card.offer.title;
     cardElement.querySelector('.popup__text--address').innerHTML = card.offer.address;
     cardElement.querySelector('.popup__text--price').innerHTML = card.offer.price + '&#x20bd;/ночь';
-    cardElement.querySelector('.popup__type').innerHTML = AccomodationType[card.offer.type];
-    cardElement.querySelector('.popup__text--capacity').innerHTML = card.offer.rooms + ' ' + window.utils.getPlural(roomsDic, card.offer.rooms) + ' для ' + card.offer.guests + ' ' + window.utils.getPlural(guestDic, card.offer.guests);
+    cardElement.querySelector('.popup__type').innerHTML = window.utils.AccommodationType[card.offer.type.toUpperCase()].NAME;
+    cardElement.querySelector('.popup__text--capacity').innerHTML = card.offer.rooms + ' ' + window.utils.getPlural(rooms, card.offer.rooms) + ' для ' + card.offer.guests + ' ' + window.utils.getPlural(guests, card.offer.guests);
     cardElement.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
     features.forEach(function (feature) {
       setFeature(feature, card.offer.features);
@@ -58,8 +42,8 @@
     card.offer.photos.forEach(function (url) {
       var photo = document.createElement('img');
       photo.src = url;
-      photo.width = PhotoSize.width;
-      photo.height = PhotoSize.height;
+      photo.width = PhotoSize.WIDTH;
+      photo.height = PhotoSize.HEIGHT;
       photo.alt = 'Фотография жилья';
       photo.classList.add('popup__photo');
       fragment.appendChild(photo);

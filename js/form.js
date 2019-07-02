@@ -1,13 +1,6 @@
 'use strict';
 
 (function () {
-  var AccommodationType = {
-    BUNGALO: 0,
-    FLAT: 1000,
-    HOUSE: 5000,
-    PALACE: 10000
-  };
-
   var filterSelect = document.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
   var formFieldset = adForm.querySelectorAll('fieldset');
@@ -22,8 +15,8 @@
   var capacityOptions = capacitySelect.querySelectorAll('option');
 
   function changeMinPrice() {
-    priceInput.min = AccommodationType[typeSelect.value.toUpperCase()];
-    priceInput.placeholder = AccommodationType[typeSelect.value.toUpperCase()];
+    priceInput.min = window.utils.AccommodationType[typeSelect.value.toUpperCase()].PRICE;
+    priceInput.placeholder = window.utils.AccommodationType[typeSelect.value.toUpperCase()].PRICE;
   }
 
   function setCapacity(value) {
@@ -84,6 +77,7 @@
   window.utils.formDisable(formFieldset);
   window.utils.formDisable(filterSelect);
   addressInput.value = '545, 445';
+  changeMinPrice();
 
   typeSelect.addEventListener('change', changeMinPrice);
   timeInSelect.addEventListener('change', function () {

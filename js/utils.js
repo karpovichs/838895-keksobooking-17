@@ -17,6 +17,24 @@
     getRandomNumber: function (min, max) {
       return Math.floor(Math.random() * (max - min)) + min;
     },
+    AccommodationType: {
+      BUNGALO: {
+        NAME: 'Бунгало',
+        PRICE: 0
+      },
+      FLAT: {
+        NAME: 'Квартира',
+        PRICE: 1000
+      },
+      HOUSE: {
+        NAME: 'Дом',
+        PRICE: 5000
+      },
+      PALACE: {
+        NAME: 'Дворец',
+        PRICE: 10000
+      }
+    },
     formDisable: function (element) {
       for (var i = 0; i < element.length; i++) {
         element[i].disabled = true;
@@ -30,11 +48,11 @@
     getPlural: function (word, n) {
       var plural;
       if (n % 10 === 1 && n % 100 !== 11) {
-        plural = 'one';
+        plural = 0;
       } else if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) {
-        plural = 'few';
+        plural = 1;
       } else {
-        plural = 'many';
+        plural = 2;
       }
       return word[plural];
     },
