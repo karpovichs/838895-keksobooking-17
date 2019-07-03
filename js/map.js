@@ -80,7 +80,7 @@
   }
 
   window.form.formReset();
-  resetButton.addEventListener('click', function (){
+  resetButton.addEventListener('click', function () {
     window.map.pageReset();
   });
 
