@@ -12,34 +12,44 @@
   var isCardOpened = false;
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
-  function setFeature(feature, data) {
-    var featureName = feature.classList[1].slice(feature.classList[1].indexOf('--') + 2);
-    if (data.indexOf(featureName) === -1) {
-      feature.style.display = 'none';
-    }
+  function Card(data) {
+    this.author = data.author;
+    this.offer = data.offer;
+    this.element = null;
   }
 
-  function setCard(card) {
-    var cardElement = cardTemplate.cloneNode(true);
-    var features = cardElement.querySelectorAll('.popup__feature');
+  Card.prototype.create = function create() {
+    this.element = cardTemplate.cloneNode(true);
+    return this;
+  };
 
-    cardElement.querySelector('.popup__avatar').src = card.author.avatar;
-    cardElement.querySelector('.popup__title').innerHTML = card.offer.title;
-    cardElement.querySelector('.popup__text--address').innerHTML = card.offer.address;
-    cardElement.querySelector('.popup__text--price').innerHTML = card.offer.price + '&#x20bd;/ночь';
-    cardElement.querySelector('.popup__type').innerHTML = window.utils.AccommodationType[card.offer.type.toUpperCase()].NAME;
-    cardElement.querySelector('.popup__text--capacity').innerHTML = card.offer.rooms + ' ' + window.utils.getPlural(rooms, card.offer.rooms) + ' для ' + card.offer.guests + ' ' + window.utils.getPlural(guests, card.offer.guests);
-    cardElement.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + card.offer.checkin + ', выезд до ' + card.offer.checkout;
-    features.forEach(function (feature) {
-      setFeature(feature, card.offer.features);
+  Card.prototype.fill = function fill() {
+    this.element.querySelector('.popup__avatar').src = this.author.avatar;
+    this.element.querySelector('.popup__title').innerHTML = this.offer.title;
+    this.element.querySelector('.popup__text--address').innerHTML = this.offer.address;
+    this.element.querySelector('.popup__text--price').innerHTML = this.offer.price + '&#x20bd;/ночь';
+    this.element.querySelector('.popup__type').innerHTML = window.utils.AccommodationType[this.offer.type.toUpperCase()].NAME;
+    this.element.querySelector('.popup__text--capacity').innerHTML = this.offer.rooms + ' ' + window.utils.getPlural(rooms, this.offer.rooms) + ' для ' + this.offer.guests + ' ' + window.utils.getPlural(guests, this.offer.guests);
+    this.element.querySelector('.popup__text--time').innerHTML = 'Заезд после ' + this.offer.checkin + ', выезд до ' + this.offer.checkout;
+    this.element.querySelector('.popup__description').innerHTML = this.offer.description;
+    this.element.querySelector('.popup__photo').remove();
+    return this;
+  };
+
+  Card.prototype.setFeatures = function setFeatures() {
+    var self = this;
+    this.element.querySelectorAll('.popup__feature').forEach(function (feature) {
+      var featureName = feature.classList[1].slice(feature.classList[1].indexOf('--') + 2);
+      if (self.offer.features.indexOf(featureName) === -1) {
+        feature.style.display = 'none';
+      }
     });
-    cardElement.querySelector('.popup__description').innerHTML = card.offer.description;
-    cardElement.querySelector('.popup__close').addEventListener('click', function () {
-      window.cards.clearCard();
-    });
-    cardElement.querySelector('.popup__photo').remove();
+    return this;
+  };
+
+  Card.prototype.setPhotos = function setPhotos() {
     var fragment = document.createDocumentFragment();
-    card.offer.photos.forEach(function (url) {
+    this.offer.photos.forEach(function (url) {
       var photo = document.createElement('img');
       photo.src = url;
       photo.width = PhotoSize.WIDTH;
@@ -48,8 +58,24 @@
       photo.classList.add('popup__photo');
       fragment.appendChild(photo);
     });
-    cardElement.querySelector('.popup__photos').appendChild(fragment);
-    return cardElement;
+    this.element.querySelector('.popup__photos').appendChild(fragment);
+    return this;
+  };
+
+  Card.prototype.addCloseListener = function addCloseListener() {
+    this.element.querySelector('.popup__close').addEventListener('click', function () {
+      window.cards.clearCard();
+    });
+  };
+
+  function setCard(card) {
+    var cardElement = new Card(card);
+    cardElement.create()
+      .fill()
+      .setFeatures()
+      .setPhotos()
+      .addCloseListener();
+    return cardElement.element;
   }
 
   window.cards = {
