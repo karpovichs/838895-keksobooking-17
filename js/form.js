@@ -56,6 +56,7 @@
   }
 
   function onSubmitSuccess() {
+    window.map.pageReset();
     window.alerts.showSuccess();
   }
 
@@ -74,11 +75,6 @@
     }, onSubmitError);
   }
 
-  window.utils.formDisable(formFieldset);
-  window.utils.formDisable(filterSelect);
-  addressInput.value = '545, 445';
-  changeMinPrice();
-
   typeSelect.addEventListener('change', changeMinPrice);
   timeInSelect.addEventListener('change', function () {
     timeOutSelect.value = timeInSelect.value;
@@ -90,4 +86,14 @@
   roomNumberSelect.addEventListener('change', changeAvailableCapacity);
 
   adForm.addEventListener('submit', onFormSubmit);
+
+  window.form = {
+    formReset: function () {
+      window.utils.formDisable(formFieldset);
+      window.utils.formDisable(filterSelect);
+      addressInput.value = '545, 445';
+      changeMinPrice();
+      changeAvailableCapacity();
+    }
+  };
 })();

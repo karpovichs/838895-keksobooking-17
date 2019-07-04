@@ -7,28 +7,62 @@
   var pinList = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
+  function Pin(data) {
+    this.location = data.location;
+    this.author = data.author;
+    this.offer = data.offer;
+    this.element = null;
+  }
+
+  Pin.prototype.create = function create() {
+    this.element = pinTemplate.cloneNode(true);
+    return this;
+  };
+
+  Pin.prototype.place = function place() {
+    this.element.style.left = this.location.x - PIN_WIDTH / 2 + 'px';
+    this.element.style.top = this.location.y - PIN_HEIGHT + 'px';
+    return this;
+  };
+
+  Pin.prototype.fill = function fill() {
+    this.element.querySelector('img').src = this.author.avatar;
+    this.element.querySelector('img').alt = this.offer.type;
+    return this;
+  };
+
+  Pin.prototype.disable = function disable() {
+    this.element.classList.remove('map__pin--active');
+    this.element.blur();
+  };
+
+  Pin.prototype.enable = function enable() {
+    this.element.classList.add('map__pin--active');
+  };
+
   function onPinEscPress(evt) {
     window.utils.isEscEvent(evt, window.cards.clearCard);
   }
 
   function renderPin(offer) {
-    var pinElement = pinTemplate.cloneNode(true);
-    pinElement.style.left = offer.location.x - PIN_WIDTH / 2 + 'px';
-    pinElement.style.top = offer.location.y - PIN_HEIGHT + 'px';
-    pinElement.querySelector('img').src = offer.author.avatar;
-    pinElement.querySelector('img').alt = offer.offer.type;
+    var pin = new Pin(offer);
+
+    pin.create()
+      .place()
+      .fill();
 
     window.addEventListener('keydown', function (evt) {
       onPinEscPress(evt);
-      pinElement.classList.remove('map__pin--active');
+      pin.disable();
     });
 
-    pinElement.addEventListener('click', function () {
+    pin.element.addEventListener('click', function () {
       window.cards.clearCard();
+      pin.enable();
       window.cards.renderCard(offer);
-      pinElement.classList.add('map__pin--active');
     });
-    return pinElement;
+
+    return pin.element;
   }
 
   window.pin = {

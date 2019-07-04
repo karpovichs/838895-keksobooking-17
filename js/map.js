@@ -3,22 +3,36 @@
 (function () {
   var MAIN_PIN_WIDTH = 65;
   var MAIN_PIN_HEIGHT = 80;
-
+  var MainPinDefault = {
+    LEFT: '570px',
+    TOP: '375px'
+  };
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
   var filterSelect = document.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
   var formFieldset = adForm.querySelectorAll('fieldset');
-  var adressInput = adForm.querySelector('input[name=address]');
+  var addressInput = adForm.querySelector('input[name=address]');
   var isLoaded = false;
   var filterForm = map.querySelector('.map__filters');
   var typeFilter = filterForm.querySelector('#housing-type');
-  var offers = [];
   var Limits = {
     TOP: 130 - MAIN_PIN_HEIGHT,
     RIGHT: map.offsetWidth - MAIN_PIN_WIDTH,
     BOTTOM: 630 - MAIN_PIN_HEIGHT,
     LEFT: 0
+  };
+  var offers = [];
+  var resetButton = adForm.querySelector('.ad-form__reset');
+
+  function Coordinates(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  Coordinates.prototype.setCoordinates = function setCoordinates(x, y) {
+    this.x = x;
+    this.y = y;
   };
 
   function onOffersSuccess(data) {
@@ -35,6 +49,8 @@
     map.classList.remove('map--faded');
     if (!isLoaded) {
       window.backend.load(onOffersSuccess, onOffersError);
+    } else {
+      window.pin.renderPinList(offers);
     }
     adForm.classList.remove('ad-form--disabled');
     window.utils.formEnable(formFieldset);
@@ -44,7 +60,7 @@
   function setPinCoordinates() {
     var coordinateX = parseInt(mainPin.style.left, 10) - MAIN_PIN_WIDTH / 2;
     var coordinateY = parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT;
-    adressInput.value = coordinateX + ', ' + coordinateY;
+    addressInput.value = coordinateX + ', ' + coordinateY;
   }
 
   function offersFilter(filterName) {
@@ -63,6 +79,11 @@
     }
   }
 
+  window.form.formReset();
+  resetButton.addEventListener('click', function () {
+    window.map.pageReset();
+  });
+
   typeFilter.addEventListener('change', function () {
     window.utils.setDebounce(updatePinList);
   });
@@ -72,22 +93,14 @@
   mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+    var startCoords = new Coordinates(evt.clientX, evt.clientY);
 
     function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY,
-      };
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
+      var shift = new Coordinates(startCoords.x - moveEvt.clientX, startCoords.y - moveEvt.clientY);
+
+      startCoords.setCoordinates(moveEvt.clientX, moveEvt.clientY);
 
       mainPin.style.left = Math.max(Math.min((mainPin.offsetLeft - shift.x), Limits.RIGHT), Limits.LEFT) + 'px';
       mainPin.style.top = Math.max(Math.min((mainPin.offsetTop - shift.y), Limits.BOTTOM), Limits.TOP) + 'px';
@@ -102,4 +115,20 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
+
+  window.map = {
+    pageReset: function () {
+      window.pin.clearPinList();
+      window.cards.clearCard();
+      map.classList.add('map--faded');
+      adForm.reset();
+      filterForm.reset();
+      adForm.classList.add('ad-form--disabled');
+      window.utils.formDisable(formFieldset);
+      window.utils.formDisable(filterSelect);
+      window.form.formReset();
+      mainPin.style.left = MainPinDefault.LEFT;
+      mainPin.style.top = MainPinDefault.TOP;
+    }
+  };
 })();
