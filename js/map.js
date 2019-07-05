@@ -113,7 +113,7 @@
   window.form.formReset();
 
   mainPin.addEventListener('keydown', function (evt) {
-    window.utils.isEnterEvent(evt, function() {
+    window.utils.isEnterEvent(evt, function () {
       setPinCoordinates();
       pageActivate();
     });
