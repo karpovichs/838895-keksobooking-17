@@ -1,8 +1,9 @@
 'use strict';
 
 (function () {
-  var KeyCodes = {
-    ESC: 27
+  var KeyCode = {
+    ESC: 27,
+    ENTER: 13
   };
 
   var DEBOUNCE_INTERVAL = 500;
@@ -10,7 +11,12 @@
 
   window.utils = {
     isEscEvent: function (evt, action) {
-      if (evt.keyCode === KeyCodes.ESC) {
+      if (evt.keyCode === KeyCode.ESC) {
+        action();
+      }
+    },
+    isEnterEvent: function (evt, action) {
+      if (evt.keyCode === KeyCode.ENTER) {
         action();
       }
     },
@@ -35,15 +41,15 @@
         PRICE: 10000
       }
     },
-    formDisable: function (element) {
-      for (var i = 0; i < element.length; i++) {
-        element[i].disabled = true;
-      }
+    formDisable: function (elements) {
+      elements.forEach(function (element) {
+        element.disabled = true;
+      });
     },
-    formEnable: function (element) {
-      for (var i = 0; i < element.length; i++) {
-        element[i].disabled = false;
-      }
+    formEnable: function (elements) {
+      elements.forEach(function (element) {
+        element.disabled = false;
+      });
     },
     getPlural: function (word, n) {
       var plural;

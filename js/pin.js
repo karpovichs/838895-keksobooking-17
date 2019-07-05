@@ -62,6 +62,14 @@
       window.cards.renderCard(offer);
     });
 
+    pin.element.addEventListener('keydown', function (evt) {
+      window.utils.isEnterEvent(evt, function () {
+        window.cards.clearCard();
+        pin.enable();
+        window.cards.renderCard(offer);
+      });
+    });
+
     return pin.element;
   }
 
