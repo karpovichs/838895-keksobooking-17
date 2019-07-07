@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var adForm = document.querySelector('.ad-form');
   var formFieldset = adForm.querySelectorAll('fieldset');
   var addressInput = adForm.querySelector('input[name=address]');
@@ -12,6 +13,27 @@
   var roomNumberSelect = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
   var capacityOptions = capacitySelect.querySelectorAll('option');
+  var avatarChooser = adForm.querySelector('#avatar');
+  var avatarPreview = adForm.querySelector('.ad-form-header__preview').querySelector('img');
+  var imagesChooser = adForm.querySelector('#images');
+  var imagesPreview = adForm.querySelector('.ad-form__photo');
+
+  function readAndPreview(file, image) {
+    var matches = FILE_TYPES.some(function (it) {
+      return file.name.toLowerCase().endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        image.src = reader.result;
+      });
+      reader.readAsDataURL(file);
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   function changeMinPrice() {
     priceInput.min = window.utils.AccommodationType[typeSelect.value.toUpperCase()].PRICE;
@@ -54,6 +76,15 @@
     }
   }
 
+  function clearUploadedImages() {
+    var uploaded = adForm.querySelectorAll('.uploaded-image');
+    uploaded.forEach(function (image) {
+      image.remove();
+    });
+    imagesPreview.style = 'display: block';
+    avatarPreview.src = 'img/muffin-grey.svg';
+  }
+
   function onSubmitSuccess() {
     window.map.pageReset();
     window.alerts.showSuccess();
@@ -84,6 +115,32 @@
   changeAvailableCapacity();
   roomNumberSelect.addEventListener('change', changeAvailableCapacity);
 
+  avatarChooser.addEventListener('change', function () {
+    var file = avatarChooser.files[0];
+    readAndPreview(file, avatarPreview);
+  });
+
+  imagesChooser.addEventListener('change', function () {
+    var files = imagesChooser.files;
+    imagesPreview.style = 'display: none';
+
+    for (var i = 0; i < files.length; i++) {
+      var image = document.createElement('img');
+      if (!readAndPreview(files[i], image)) {
+        continue;
+      }
+
+      var container = document.createElement('div');
+      container.style = 'display: flex; align-items: center';
+      container.classList.add('ad-form__photo', 'uploaded-image');
+      readAndPreview(files[i], image);
+      image.width = 50;
+      image.style = 'margin: 0 auto;';
+      container.appendChild(image);
+      adForm.querySelector('.ad-form__photo-container').appendChild(container);
+    }
+  });
+
   adForm.addEventListener('submit', onFormSubmit);
 
   window.form = {
@@ -98,6 +155,7 @@
       addressInput.value = '545, 445';
       changeMinPrice();
       changeAvailableCapacity();
+      clearUploadedImages();
     }
   };
 })();

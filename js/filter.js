@@ -35,17 +35,18 @@
       return data.filter(function (datum) {
         var isProper = true;
         for (var key in state) {
-          if (state.hasOwnProperty(key)) {
-            if (key === 'price') {
-              isProper = checkPrice(datum.offer, state[key]);
-            } else if (key === 'features') {
-              isProper = checkFeatures(datum.offer, state[key]);
-            } else {
-              isProper = checkProperty(datum.offer[key], state[key]);
-            }
-            if (!isProper) {
-              return false;
-            }
+          if (!state.hasOwnProperty(key)) {
+            continue;
+          }
+          if (key === 'price') {
+            isProper = checkPrice(datum.offer, state[key]);
+          } else if (key === 'features') {
+            isProper = checkFeatures(datum.offer, state[key]);
+          } else {
+            isProper = checkProperty(datum.offer[key], state[key]);
+          }
+          if (!isProper) {
+            return false;
           }
         }
         return isProper;

@@ -54,18 +54,20 @@
   }
 
   function pageActivate() {
-    if (!isActivated) {
-      setDefaultState(state);
-      map.classList.remove('map--faded');
-      if (!isLoaded) {
-        window.backend.load(onOffersSuccess, onOffersError);
-      } else {
-        window.pin.renderPinList(offers);
-        filterFormEnable();
-      }
-      window.form.formEnable();
-      isActivated = true;
+    if (isActivated) {
+      return;
     }
+
+    setDefaultState(state);
+    map.classList.remove('map--faded');
+    if (!isLoaded) {
+      window.backend.load(onOffersSuccess, onOffersError);
+    } else {
+      window.pin.renderPinList(offers);
+      filterFormEnable();
+    }
+    window.form.formEnable();
+    isActivated = true;
   }
 
   function setPinCoordinates() {
