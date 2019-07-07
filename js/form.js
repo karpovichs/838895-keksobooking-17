@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var filterSelect = document.querySelectorAll('.map__filter');
   var adForm = document.querySelector('.ad-form');
   var formFieldset = adForm.querySelectorAll('fieldset');
   var addressInput = adForm.querySelector('input[name=address]');
@@ -88,9 +87,14 @@
   adForm.addEventListener('submit', onFormSubmit);
 
   window.form = {
+    formEnable: function () {
+      adForm.classList.remove('ad-form--disabled');
+      window.utils.formEnable(formFieldset);
+    },
     formReset: function () {
+      adForm.reset();
+      adForm.classList.add('ad-form--disabled');
       window.utils.formDisable(formFieldset);
-      window.utils.formDisable(filterSelect);
       addressInput.value = '545, 445';
       changeMinPrice();
       changeAvailableCapacity();
