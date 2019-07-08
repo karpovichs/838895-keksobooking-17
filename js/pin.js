@@ -1,8 +1,10 @@
 'use strict';
 
 (function () {
-  var PIN_WIDTH = 50;
-  var PIN_HEIGHT = 70;
+  var PinSize = {
+    WIDTH: 50,
+    HEIGHT: 70
+  };
 
   var pinList = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -20,8 +22,8 @@
   };
 
   Pin.prototype.place = function place() {
-    this.element.style.left = this.location.x - PIN_WIDTH / 2 + 'px';
-    this.element.style.top = this.location.y - PIN_HEIGHT + 'px';
+    this.element.style.left = this.location.x - PinSize.WIDTH / 2 + 'px';
+    this.element.style.top = this.location.y - PinSize.HEIGHT + 'px';
     return this;
   };
 

@@ -7,18 +7,18 @@
     LEFT: '570px',
     TOP: '375px'
   };
+  var Limit = {
+    TOP: 130 - MAIN_PIN_HEIGHT,
+    RIGHT: document.querySelector('.map').offsetWidth - MAIN_PIN_WIDTH,
+    BOTTOM: 630 - MAIN_PIN_HEIGHT,
+    LEFT: 0
+  };
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
   var adForm = document.querySelector('.ad-form');
   var addressInput = adForm.querySelector('input[name=address]');
   var isLoaded = false;
   var isActivated = false;
-  var Limits = {
-    TOP: 130 - MAIN_PIN_HEIGHT,
-    RIGHT: map.offsetWidth - MAIN_PIN_WIDTH,
-    BOTTOM: 630 - MAIN_PIN_HEIGHT,
-    LEFT: 0
-  };
   var offers = [];
   var resetButton = adForm.querySelector('.ad-form__reset');
   var filterForm = map.querySelector('.map__filters');
@@ -132,8 +132,8 @@
 
       startCoords.setCoordinates(moveEvt.clientX, moveEvt.clientY);
 
-      mainPin.style.left = Math.max(Math.min((mainPin.offsetLeft - shift.x), Limits.RIGHT), Limits.LEFT) + 'px';
-      mainPin.style.top = Math.max(Math.min((mainPin.offsetTop - shift.y), Limits.BOTTOM), Limits.TOP) + 'px';
+      mainPin.style.left = Math.max(Math.min((mainPin.offsetLeft - shift.x), Limit.RIGHT), Limit.LEFT) + 'px';
+      mainPin.style.top = Math.max(Math.min((mainPin.offsetTop - shift.y), Limit.BOTTOM), Limit.TOP) + 'px';
     }
 
     function onMouseUp(upEvt) {
