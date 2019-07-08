@@ -161,7 +161,7 @@
     onSingleDrop(evt);
   });
 
-  imagesDropZone.addEventListener('drop', function(evt) {
+  imagesDropZone.addEventListener('drop', function (evt) {
     onMultipleDrop(evt);
   });
 
