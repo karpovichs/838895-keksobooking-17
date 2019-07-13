@@ -92,7 +92,7 @@
     }
   }
 
-  function changeAvailableCapacity() {
+  function changeCapacity() {
     switch (roomNumberSelect.value) {
       case '1':
         setCapacity('1');
@@ -107,6 +107,14 @@
         setCapacity('0');
         break;
     }
+  }
+
+  function onSelectChangePrice() {
+    changeMinPrice();
+  }
+
+  function onSelectChangeCapacity() {
+    changeCapacity();
   }
 
   function clearUploadedImages() {
@@ -138,15 +146,15 @@
     }, onSubmitError);
   }
 
-  typeSelect.addEventListener('change', changeMinPrice);
+  typeSelect.addEventListener('change', onSelectChangePrice);
   timeInSelect.addEventListener('change', function () {
     timeOutSelect.value = timeInSelect.value;
   });
   timeOutSelect.addEventListener('change', function () {
     timeInSelect.value = timeOutSelect.value;
   });
-  changeAvailableCapacity();
-  roomNumberSelect.addEventListener('change', changeAvailableCapacity);
+  changeCapacity();
+  roomNumberSelect.addEventListener('change', onSelectChangeCapacity);
 
   DRAG_EVENTS.forEach(function (event) {
     avatarDropZone.addEventListener(event, function (evt) {
@@ -157,13 +165,9 @@
     });
   });
 
-  avatarDropZone.addEventListener('drop', function (evt) {
-    onSingleDrop(evt);
-  });
+  avatarDropZone.addEventListener('drop', onSingleDrop);
 
-  imagesDropZone.addEventListener('drop', function (evt) {
-    onMultipleDrop(evt);
-  });
+  imagesDropZone.addEventListener('drop', onMultipleDrop);
 
   avatarChooser.addEventListener('change', function () {
     var file = avatarChooser.files[0];
@@ -188,7 +192,7 @@
       window.utils.formDisable(formFieldset);
       addressInput.value = '545, 445';
       changeMinPrice();
-      changeAvailableCapacity();
+      changeCapacity();
       clearUploadedImages();
     }
   };

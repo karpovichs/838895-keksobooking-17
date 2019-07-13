@@ -14,6 +14,15 @@
     return (template, className);
   }
 
+  function hideAlert() {
+    var alerts = document.querySelectorAll('.error, .success');
+    alerts.forEach(function (alert) {
+      alert.remove();
+    });
+    document.removeEventListener('click', onAlertClick);
+    document.removeEventListener('keydown', onAlertEscPress);
+  }
+
   function onAlertEscPress(evt) {
     window.utils.isEscEvent(evt, hideAlert);
   }
@@ -24,25 +33,21 @@
     }
   }
 
-  function hideAlert() {
-    var alerts = document.querySelectorAll('.error, .success');
-    alerts.forEach(function (alert) {
-      alert.remove();
-    });
-    document.removeEventListener('keydown', onAlertEscPress);
+  function onErrorButtonClick() {
+    hideAlert();
   }
 
   window.alerts = {
     showError: function () {
       createAlert(errorTemplate, 'error');
       var errorButton = document.querySelector('.error__button');
-      errorButton.addEventListener('click', hideAlert);
+      errorButton.addEventListener('click', onErrorButtonClick);
       document.addEventListener('click', onAlertClick);
       document.addEventListener('keydown', onAlertEscPress);
     },
 
     showSuccess: function () {
-      createAlert(successTemplate, 'sucess');
+      createAlert(successTemplate, 'success');
       document.addEventListener('click', onAlertClick);
       document.addEventListener('keydown', onAlertEscPress);
     }

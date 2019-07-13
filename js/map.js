@@ -70,10 +70,25 @@
     isActivated = true;
   }
 
-  function setPinCoordinates() {
+  function setCoords() {
     var coordinateX = parseInt(mainPin.style.left, 10) - MAIN_PIN_WIDTH / 2;
     var coordinateY = parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT;
     addressInput.value = coordinateX + ', ' + coordinateY;
+  }
+
+  function onPinClick() {
+    pageActivate();
+  }
+
+  function onPinEnterPress(evt) {
+    window.utils.isEnterEvent(evt, function () {
+      setCoords();
+      pageActivate();
+    });
+  }
+
+  function onPinMouseup() {
+    setCoords();
   }
 
   function setDefaultState(data) {
@@ -114,14 +129,9 @@
 
   window.form.formReset();
 
-  mainPin.addEventListener('keydown', function (evt) {
-    window.utils.isEnterEvent(evt, function () {
-      setPinCoordinates();
-      pageActivate();
-    });
-  });
-  mainPin.addEventListener('mouseup', setPinCoordinates);
-  mainPin.addEventListener('mousedown', pageActivate);
+  mainPin.addEventListener('keydown', onPinEnterPress);
+  mainPin.addEventListener('mouseup', onPinMouseup);
+  mainPin.addEventListener('mousedown', onPinClick);
   mainPin.addEventListener('mousedown', function (evt) {
     var startCoords = new Coordinates(evt.clientX, evt.clientY);
 
